@@ -1,6 +1,7 @@
 import React from "react";
 import DisplayGif from "./Components/DisplayGif";
 import Search from "./Components/Search";
+import Random from "./Components/Random";
 import "./App.css";
 
 class App extends React.Component {
@@ -10,11 +11,11 @@ class App extends React.Component {
       gif: [],
     }; // bind methods to the state below declaring the state object
     // the name "gifSetter" is a custom name and can be anything?
-    this.gifSetter = this.setGif.bind(this);
+    this.setGif = this.setGif.bind(this);
   } //END CONSTRUCTOR
 
   setGif(value) {
-    this.setState({ gif: value.data });
+    this.setState({ gif: value });
     console.log(value);
   } // END SET GIF
 
@@ -25,7 +26,12 @@ class App extends React.Component {
     ) // json seems to be how we access the data that we fetched.
       .then((response) => response.json())
       .then((json) => {
-        this.setState({ gif: json.data });
+        console.log(json);
+        let urlArr = json.data.map((data) => {
+          return data.images.original.url;
+        });
+        console.log(urlArr);
+        this.setState({ gif: urlArr });
       });
   } // END COMPONENT DID MOUNT
 
@@ -35,16 +41,17 @@ class App extends React.Component {
       display = [];
       console.log(this.state.gif);
       for (let i = 0; i < this.state.gif.length; i++) {
-        display.push(
-          <DisplayGif url={this.state.gif[i].images.original.url}></DisplayGif>
-        );
+        display.push(<DisplayGif url={this.state.gif[i]} />);
       } // END FOR LOOP
     } else {
       display = <div>Nothing</div>;
     } // END IF ELSE
     return (
       <div className="App">
-        <Search setter={this.gifSetter}></Search>
+        {console.log(typeof this.props)}
+        {console.log(this.props)}
+        <Random setter={this.setGif} />
+        <Search setter={this.setGif}></Search>
         {display}
       </div>
     );

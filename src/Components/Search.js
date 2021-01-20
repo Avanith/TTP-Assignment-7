@@ -21,7 +21,12 @@ export class Search extends Component {
     )
       .then((response) => response.json())
       .then((json) => {
-        this.props.setter(json);
+        console.log(json);
+        let urlArr = json.data.map((data) => {
+          return data.images.original.url;
+        });
+        console.log(urlArr);
+        this.props.setter(urlArr);
       });
   }; // END HANDLE SUBMIT
 
